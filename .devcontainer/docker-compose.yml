@@ -9,16 +9,15 @@ services:
     volumes:
       - ../..:/workspaces:cached
 
-    command: sleep infinity
-
     environment:
-      DB_HOST: mymusic-miin.g.aivencloud.com
-      DB_PORT: 13387
-      DB_NAME: defaultdb
-      DB_USER: avnadmin
-      DB_PASSWORD: AVNS_uPNV7rxz7SI6Udynlqm
-      DB_SSL_MODE: required  # Nếu Aiven yêu cầu SSL
+      DB_HOST: ${DB_HOST}
+      DB_PORT: ${DB_PORT}
+      DB_NAME: ${DB_NAME}
+      DB_USER: ${DB_USER}
+      DB_PASSWORD: ${DB_PASSWORD}
+      DB_SSL_MODE: required
 
+    command: sleep infinity
     # Nếu cần, có thể mở port (nếu chạy cục bộ)
     ports:
       - "8080:8080"
