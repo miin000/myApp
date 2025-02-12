@@ -7,11 +7,7 @@
         <div class="col-12">
             <div class="card shadow-sm">
                 <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
-                    @if(Auth::user()->isAdmin())
-                        <h2 class="mb-0">Library of Playlists</h2>
-                    @else
                         <h2 class="mb-0">My Playlists</h2>
-                    @endif
                     <a href="{{ route('playlists.create') }}" class="btn btn-light">
                         <i class="fas fa-plus me-2"></i>Create New Playlist
                     </a>
@@ -40,7 +36,7 @@
                                             <a href="{{ route('playlists.show', $playlist->id) }}" class="btn btn-outline-primary btn-sm">
                                                 <i class="fas fa-eye me-1"></i>View
                                             </a>
-                                            @if(!Auth::user()->isAdmin() || Auth::user()->id == $playlist->user_id)
+                                            @if(Auth::user()->id == $playlist->user_id)
                                                 <div class="btn-group" role="group">
                                                     <a href="{{ route('playlists.edit', $playlist->id) }}" class="btn btn-outline-secondary btn-sm">
                                                         <i class="fas fa-edit me-1"></i>Edit
@@ -70,9 +66,7 @@
         </div>
     </div>
 </div>
-@endsection
 
-@push('styles')
 <style>
 .playlist-card {
     transition: transform 0.3s ease, box-shadow 0.3s ease;
@@ -82,4 +76,5 @@
     box-shadow: 0 4px 6px rgba(0,0,0,0.1);
 }
 </style>
-@endpush
+
+@endsection

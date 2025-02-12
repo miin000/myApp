@@ -54,6 +54,10 @@ class SongController extends Controller
             'song_file' => 'required|file|mimes:mp3|max:10240',
         ]);
 
+        if ($request->fails()) {
+            dd($request->errors());
+        }
+
         // Tìm hoặc tạo nghệ sĩ
         $artist = Artist::firstOrCreate(
             ['name' => $request->artist_name]

@@ -19,11 +19,12 @@
     </head>
     <body>
         <div class="font-sans text-gray-900 antialiased">
-            @if(isset($slot))
+            <!-- @if(isset($slot))
                     {{ $slot }}
                 @else
                     @yield('content')
-                @endif
+                @endif -->
+                {{ $slot }}
         </div>
 
         @livewireScripts

@@ -1,0 +1,40 @@
+{
+    "name": "PHP Development with Aiven MySQL",
+    "dockerComposeFile": "docker-compose.yml",
+    "service": "app",
+    "workspaceFolder": "/workspaces/${localWorkspaceFolderBasename}",
+
+    "forwardPorts": [
+        8080,
+        8000,
+        8001
+    ],
+
+    "features": {
+        "ghcr.io/devcontainers-contrib/features/gh-cli:1": {}
+    },
+
+    "postCreateCommand": "sudo chmod a+x \"$(pwd)\" && sudo rm -rf /var/www/html && sudo ln -s \"$(pwd)\" /var/www/html",
+
+    "customizations": {
+        "vscode": {
+            "extensions": [
+                "ikappas.composer",
+                "felixfbecker.php-debug",
+                "felixfbecker.php-intellisense",
+                "bmewburn.vscode-intelephense-client"
+            ]
+        }
+    },
+
+    "remoteUser": "vscode"
+
+    // "environment": {
+    //     "DB_HOST": "your-aiven-mysql-host",
+    //     "DB_PORT": "3306",
+    //     "DB_NAME": "your-database-name",
+    //     "DB_USER": "your-username",
+    //     "DB_PASSWORD": "your-password",
+    //     "DB_SSL_MODE": "required"
+    // }
+}

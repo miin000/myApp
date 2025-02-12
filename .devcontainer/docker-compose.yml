@@ -1,0 +1,25 @@
+version: '3.8'
+
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+
+    volumes:
+      - ../..:/workspaces:cached
+
+    command: sleep infinity
+
+    environment:
+      DB_HOST: mymusic-miin.g.aivencloud.com
+      DB_PORT: 13387
+      DB_NAME: defaultdb
+      DB_USER: avnadmin
+      DB_PASSWORD: AVNS_uPNV7rxz7SI6Udynlqm
+      DB_SSL_MODE: required  # Nếu Aiven yêu cầu SSL
+
+    # Nếu cần, có thể mở port (nếu chạy cục bộ)
+    ports:
+      - "8080:8080"
+      - "8000:8000"
