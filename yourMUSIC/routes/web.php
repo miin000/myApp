@@ -26,14 +26,14 @@ Route::middleware('auth')->group(function () {
 Route::resource('songs',SongController::class);
 Route::get('/songs', [SongController::class, 'index'])->name('songs.index');
 Route::get('/admin', [SongController::class, 'admin'])->name('songs.admin');
-Route::get('/songs/create', [SongController::class, 'create'])->name('songs.create');    
+// Route::get('/songs/create', [SongController::class, 'create'])->name('songs.create');    
 Route::post('/songs', [SongController::class, 'store'])->name('songs.store');
 Route::get('/songs/{song}/next', [SongController::class, 'next'])->name('songs.next');
 Route::get('/songs/{song}/prev', [SongController::class, 'prev'])->name('songs.prev');
 // Route::post('/songs/{song}/add-to-library', [SongController::class, 'addToLibrary'])->name('library.add');
 
 //test
-Route::get('/play-test', [SongController::class, 'playTest']);
+Route::get('/playtest', [SongController::class, 'playTest']);
 
 // Playlist Routes
 Route::resource('playlists',PlaylistController::class);

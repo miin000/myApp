@@ -14,7 +14,7 @@ class Song extends Model
         'artist_id',
         'album_id',
         'genre',
-        'file_path',
+        'file_path'
     ];
 
     public function artist()

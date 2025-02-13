@@ -40,6 +40,18 @@
                                         </p>
                                         <p>Visit Home</p>
                                     </a>
+                                    <!--form logout-->
+                                    <div style="position: absolute; top: 10px; right: 10px;">
+                                        <form method="POST" action="{{ route('logout') }}" class="inline">
+                                            @csrf
+                                            <button type="submit" 
+                                                class="rounded-md px-3 py-2 text-black ring-1 ring-transparent transition hover:text-black/70 focus:outline-none focus-visible:ring-[#FF2D20]">
+                                                <p style="font-size: 30px; font-weight: bold; background: linear-gradient(to right, #FF0000, #FF4500, #b10000); background-clip: text; -webkit-background-clip: text; color: transparent;">
+                                                    Logout
+                                                </p>
+                                            </button>
+                                        </form>
+                                    </div>
                                 @else
                                     <a
                                         href="{{ route('login') }}"

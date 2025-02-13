@@ -7,6 +7,7 @@ use App\Models\Song;
 use Illuminate\Support\Facades\Storage;
 use App\Models\Artist;
 use App\Models\Album;
+use Illuminate\Support\Facades\Log;
 
 
 class SongController extends Controller
@@ -46,53 +47,86 @@ class SongController extends Controller
     
     public function store(Request $request)
     {
-        $request->validate([
-            'title' => 'required|string|max:255',
-            'artist_name' => 'required|string|max:255',
-            'album_name' => 'nullable|string|max:255',
-            'genre' => 'nullable|string|max:255',
-            'song_file' => 'required|file|mimes:mp3|max:10240',
-        ]);
+        try {
+            Log::info('Starting song upload process');
+            
+            // Validate request
+            $validated = $request->validate([
+                'title' => 'required|string|max:255',
+                'artist_name' => 'required|string|max:255',
+                'album_name' => 'nullable|string|max:255',
+                'genre' => 'nullable|string|max:255',
+                'song_file' => 'required|file|mimes:mp3|max:10240',
+            ]);
 
-        if ($request->fails()) {
-            dd($request->errors());
-        }
+            Log::info('Validation passed', $validated);
 
-        // Tìm hoặc tạo nghệ sĩ
-        $artist = Artist::firstOrCreate(
-            ['name' => $request->artist_name]
-        );
+            // Tìm hoặc tạo artist
+            $artist = Artist::firstOrCreate(['name' => $request->artist_name]);
+            Log::info('Artist processed', ['artist_id' => $artist->id]);
 
-        // Xử lý album nếu được cung cấp
-        $album = null;
-        if ($request->album_name) {
-            $album = Album::firstOrCreate(
-                [
+            // Xử lý album nếu có
+            $album = null;
+            if ($request->album_name) {
+                $album = Album::firstOrCreate([
                     'artist_id' => $artist->id,
-                    'title' => $request->album_name  // Thay đổi từ 'name' thành 'title'
-                ]
-            );
-        }
+                    'title' => $request->album_name
+                ]);
+                Log::info('Album processed', ['album_id' => $album->id]);
+            }
 
-        // Xử lý file bài hát
-        $path = null;
-        if ($request->hasFile('song_file')) {
+            // Xử lý file upload
+            if (!$request->hasFile('song_file')) {
+                throw new \Exception('No song file uploaded');
+            }
+
             $file = $request->file('song_file');
             $fileName = $file->getClientOriginalName();
+            
+            // Đảm bảo thư mục tồn tại
+            if (!Storage::disk('public')->exists('songs')) {
+                Storage::disk('public')->makeDirectory('songs');
+            }
+
+            // Upload file
             $path = $file->storeAs('songs', $fileName, 'public');
+            
+            if (!$path) {
+                throw new \Exception('Failed to store the song file');
+            }
+
+            Log::info('File uploaded successfully', ['path' => $path]);
+
+            // Tạo song record
+            $song = new Song();
+            $song->title = $request->title;
+            $song->artist_id = $artist->id;
+            $song->album_id = $album ? $album->id : null;
+            $song->genre = $request->genre;
+            $song->file_path = $path;
+            
+            if (!$song->save()) {
+                // Nếu không lưu được song, xóa file đã upload
+                Storage::disk('public')->delete($path);
+                throw new \Exception('Failed to save song to database');
+            }
+
+            Log::info('Song saved successfully', ['song_id' => $song->id]);
+
+            return redirect()
+                ->route('songs.index')
+                ->with('success', 'Song uploaded successfully');
+
+        } catch (\Exception $e) {
+            Log::error('Error uploading song', [
+                'message' => $e->getMessage(),
+                'trace' => $e->getTraceAsString()
+            ]);
+
+            return back()
+                ->withInput()
+                ->withErrors(['error' => 'Failed to upload song: ' . $e->getMessage()]);
         }
-
-        // Tạo bài hát
-        Song::create([
-            'title' => $request->title,
-            'artist_id' => $artist->id,
-            'album_id' => $album ? $album->id : null,
-            'genre' => $request->genre,
-            'file_path' => $path,
-        ]);
-
-        return redirect()->route('songs.index')
-            ->with('success', 'Song uploaded successfully');
     }
     
     // Cập nhật phương thức checkArtist để trả về tên album chính xác
@@ -187,74 +221,47 @@ class SongController extends Controller
     
     public function next(Song $song)
     {
-        // Nếu bài hát thuộc album, ưu tiên lấy bài tiếp theo trong album
-        if ($song->album_id) {
-            $nextSong = Song::where('album_id', $song->album_id)
-            ->where('id', '>', $song->id)
+        // Tìm bài hát tiếp theo có id lớn hơn bài hiện tại
+        $nextSong = Song::where('id', '>', $song->id)
+            ->orderBy('id')
             ->first();
-            
-            if (!$nextSong) {
-                // Quay lại bài đầu tiên trong album
-                $nextSong = Song::where('album_id', $song->album_id)
-                ->orderBy('id')
+        
+        // Nếu không có bài tiếp theo (đang ở bài cuối cùng)
+        // thì quay lại bài đầu tiên trong danh sách
+        if (!$nextSong) {
+            $nextSong = Song::orderBy('id')
                 ->first();
-            }
-        } else {
-            // Nếu không thuộc album, lấy bài tiếp theo trong list
-            $nextSong = Song::where('id', '>', $song->id)->first();
-            if (!$nextSong) {
-                $nextSong = Song::first();
-            }
         }
         
         return redirect()->route('songs.show', $nextSong);
     }
-    
+
     public function prev(Song $song)
     {
-        // Tương tự như next, ưu tiên bài trong cùng album
-        if ($song->album_id) {
-            $prevSong = Song::where('album_id', $song->album_id)
-            ->where('id', '<', $song->id)
+        // Tìm bài hát trước có id nhỏ hơn bài hiện tại
+        $prevSong = Song::where('id', '<', $song->id)
             ->orderBy('id', 'desc')
             ->first();
-            
-            if (!$prevSong) {
-                // Quay lại bài cuối cùng trong album
-                $prevSong = Song::where('album_id', $song->album_id)
-                ->orderBy('id', 'desc')
+        
+        // Nếu không có bài trước đó (đang ở bài đầu tiên)
+        // thì chuyển đến bài cuối cùng trong danh sách
+        if (!$prevSong) {
+            $prevSong = Song::orderBy('id', 'desc')
                 ->first();
-            }
-        } else {
-            $prevSong = Song::where('id', '<', $song->id)
-            ->orderBy('id', 'desc')
-            ->first();
-            if (!$prevSong) {
-                $prevSong = Song::orderBy('id', 'desc')->first();
-            }
         }
         
         return redirect()->route('songs.show', $prevSong);
-    }
-    
-    public function admin()
-    {
-        $songs = Song::with(['artist', 'album'])->get();
-        return view('songs.admin', compact('songs'));
     }
 
     //test
     public function playTest()
     {
-        // Đường dẫn đầy đủ file trên hệ thống
-        $filePath = 'D:/PHP/myMUSIC/myMusicApp/public/storage/songs/matketnot_dongdomic.mp3';
-
-        // Kiểm tra xem file có tồn tại không
+        $filePath = storage_path('app/public/songs/matketnot_dongdomic.mp3');
+        
         if (!file_exists($filePath)) {
             return response()->json(['error' => 'File not found'], 404);
         }
 
-        // Trả về file dưới dạng response
         return response()->file($filePath);
     }
 

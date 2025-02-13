@@ -64,4 +64,10 @@ class User extends Authenticatable
             'password' => 'hashed',
         ];
     }
+
+    // Quan hệ 1-n: Một người dùng có nhiều playlist
+    public function playlists()
+    {
+        return $this->hasMany(Playlist::class);
+    }
 }
