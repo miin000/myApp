@@ -50,8 +50,12 @@ class ArtistController extends Controller
      */
     public function show(Artist $artist)
     {
-        $artist->load(['albums', 'songs']);
-        return view('artists.show', compact('artist'));
+        // Eager load songs để tránh N+1 query
+        $artist->load('songs');
+        
+        return view('artists.index', [
+            'artist' => $artist
+        ]);
     }
 
     public function getAlbums(Artist $artist)

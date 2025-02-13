@@ -1,9 +1,10 @@
 @extends('layouts.app')
 
 @section('content')
+
 <div class="container">
     <div class="row mb-4">
-        <div class="col-md-8">
+        <div class="col-md-12 text-center">
             <h1>{{ $song->title }}</h1>
             <div class="text-muted">
                 <p class="mb-1">
@@ -19,24 +20,30 @@
         </div>
     </div>
 
-    <div class="card mb-4">
-        <div class="card-body d-flex justify-content-center align-items-center">
-            <div class="w-100">
-                <audio id="audioPlayer" class="w-100" controls>
-                    <source src="{{ asset('storage/' . $song->file_path) }}" type="audio/mpeg">
-                    Your browser does not support the audio element.
-                </audio>
+    <div class="row mb-4">
+        <div class="col-md-12 text-center">
+            <div class="artist-image-container">
+                <img src="{{ asset('storage/' . $song->artist->image) }}" alt="{{ $song->artist->name }}" class="artist-image rounded-circle">
             </div>
         </div>
     </div>
 
-    <div class="d-flex justify-content-between mb-4">
-        <a href="{{ route('songs.prev', $song->id) }}" class="btn btn-outline-primary">
-            <i class="bi bi-skip-backward-fill"></i> Previous
-        </a>
-        <a href="{{ route('songs.next', $song->id) }}" class="btn btn-outline-primary">
-            Next <i class="bi bi-skip-forward-fill"></i>
-        </a>
+    <div class="card mb-4">
+        <div class="card-body">
+            <audio id="audioPlayer" class="w-100" controls>
+                <source src="{{ asset('storage/' . $song->file_path) }}" type="audio/mpeg">
+                Your browser does not support the audio element.
+            </audio>
+
+            <div class="d-flex justify-content-between mt-3">
+                <a href="{{ route('songs.prev', $song->id) }}" class="btn btn-outline-primary">
+                    <i class="bi bi-skip-backward-fill"></i> Previous
+                </a>
+                <a href="{{ route('songs.next', $song->id) }}" class="btn btn-outline-primary">
+                    Next <i class="bi bi-skip-forward-fill"></i>
+                </a>
+            </div>
+        </div>
     </div>
 
     @auth
@@ -49,8 +56,8 @@
                     @forelse(Auth::user()->playlists as $playlist)
                         <div class="col-md-4 mb-3">
                             <a href="{{ route('playlists.show', $playlist->id) }}" class="text-decoration-none">
-                                <div class="card h-100">
-                                    <div class="card-body listPlay">
+                                <div class="card h-100 listPlay">
+                                    <div class="card-body">
                                         <h5 class="card-title">{{ $playlist->name }}</h5>
                                         <p class="card-text small text-muted">
                                             {{ $playlist->songs->count() }} songs
@@ -62,35 +69,14 @@
                                             </button>
                                         </form>
                                     </div>
-
-                                    {{-- <div class="col-md-4 mb-3">
-                                        <a href="{{ route('playlists.show', $playlist->id) }}" class="text-decoration-none">
-                                            <div class="card h-100 listPlay">
-                                                <div class="card-body">
-                                                    <h5 class="card-title">{{ $playlist->name }}</h5>
-                                                    <p class="card-text small text-muted">
-                                                        {{ $playlist->songs->count() }} songs
-                                                    </p>
-                                                    <form action="{{ route('playlists.addSong', [$playlist->id, $song->id]) }}" method="POST">
-                                                        @csrf
-                                                        <button type="submit" class="btn btn-primary btn-sm w-100">
-                                                            Add to this playlist
-                                                        </button>
-                                                    </form>
-                                                </div>
-                                            </div>
-                                        </a>
-                                    </div> --}}
-                                    
                                 </div>
                             </a>
-                            
                         </div>
                     @empty
                         <div class="col-12">
                             <p class="text-muted">You don't have any playlists yet.</p>
                         </div>
-                    @endforelse              
+                    @endforelse
                     <div class="col-md-4 mb-3">
                         <div class="card h-100">
                             <div class="card-body d-flex align-items-center justify-content-center">
@@ -112,25 +98,46 @@
     }
 
     .listPlay:hover {
-        background-color: #f0f0f0; /* Màu nền khi hover */
+        background-color: #f0f0f0;
     }
 
     .listPlay button {
         position: relative;
-        z-index: 2; /* Đảm bảo nút "Add to this playlist" vẫn bấm được */
+        z-index: 2;
+    }
+
+    .artist-image-container {
+        width: 200px; /* Adjust as needed */
+        height: 200px; /* Adjust as needed */
+        margin: 0 auto;
+    }
+
+    .artist-image {
+        width: 100%;
+        height: 100%;
+        object-fit: cover; /* Ensure image covers the container */
+        animation: rotate 20s linear infinite; /* Rotate animation */
+    }
+
+    @keyframes rotate {
+        from {
+            transform: rotate(0deg);
+        }
+        to {
+            transform: rotate(360deg);
+        }
     }
 </style>
 
 @push('scripts')
 <script>
-    // Lưu vị trí phát khi người dùng rời khỏi trang
     const audioPlayer = document.getElementById('audioPlayer');
-    
+    let isPlaying = false; // Track the playing state
+
     audioPlayer.addEventListener('timeupdate', () => {
         localStorage.setItem('audioPosition', audioPlayer.currentTime);
     });
 
-    // Khôi phục vị trí phát khi tải lại trang
     window.addEventListener('load', () => {
         const savedPosition = localStorage.getItem('audioPosition');
         if (savedPosition !== null) {
@@ -145,4 +152,5 @@
         {{ session('error') }}
     </div>
 @endif
+
 @endsection

@@ -1,4 +1,3 @@
-
 @extends('layouts.app')
 
 @section('content')
@@ -28,7 +27,15 @@
                 <div class="col-md-6 col-lg-4 mb-4">
                     <div class="card h-100">
                         <div class="card-body">
-                            <h5 class="card-title">{{ $song->title }}</h5>
+                            <div class="d-flex align-items-center mb-3">
+                                @if($song->artist->image)
+                                    <img src="{{ asset('storage/' . $song->artist->image) }}" 
+                                         class="rounded-circle me-2" 
+                                         alt="{{ $song->artist->name }}"
+                                         style="width: 40px; height: 40px; object-fit: cover;">
+                                @endif
+                                <h5 class="card-title mb-0">{{ $song->title }}</h5>
+                            </div>
                             <div class="text-muted mb-3">
                                 <p class="mb-1"><i class="bi bi-person"></i> Artist: {{ $song->artist->name }}</p>
                                 <p class="mb-1"><i class="bi bi-disc"></i> Album: {{ $song->album ? $song->album->title : 'Không có' }}</p>

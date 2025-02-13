@@ -5,6 +5,9 @@ use App\Http\Controllers\PlaylistController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\HomeController;  
+use App\Http\Controllers\ArtistController;  
+use App\Http\Controllers\AlbumController;  
+use App\Http\Controllers\GenreController;  
 
 Route::get('/', function () {
     return view('welcome');
@@ -25,7 +28,6 @@ Route::middleware('auth')->group(function () {
 // Routes for Songs
 Route::resource('songs',SongController::class);
 Route::get('/songs', [SongController::class, 'index'])->name('songs.index');
-Route::get('/admin', [SongController::class, 'admin'])->name('songs.admin');
 // Route::get('/songs/create', [SongController::class, 'create'])->name('songs.create');    
 Route::post('/songs', [SongController::class, 'store'])->name('songs.store');
 Route::get('/songs/{song}/next', [SongController::class, 'next'])->name('songs.next');
@@ -40,5 +42,12 @@ Route::resource('playlists',PlaylistController::class);
 Route::post('playlists/{playlist}/songs/{song}',[PlaylistController::class,'addSong'])->name('playlists.addSong');
 Route::delete('playlists/{playlist}/songs/{song}',[PlaylistController::class,'removeSong'])->name('playlists.removeSong');
 
-//album
+// Album Routes
+Route::get('/albums/{album}', [AlbumController::class, 'show'])->name('albums.show');
 Route::get('/check-artist/{artistName}', [SongController::class, 'checkArtist'])->name('songs.checkArtist');
+
+// Artist Routes
+Route::get('/artists/{artist}', [ArtistController::class, 'show'])->name('artists.show');
+
+//Genre
+Route::get('/genres/{genre}', [GenreController::class, 'show'])->name('genres.show');

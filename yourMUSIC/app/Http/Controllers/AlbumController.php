@@ -3,7 +3,6 @@
 namespace App\Http\Controllers;
 
 use App\Models\Album;
-use App\Models\Artist;
 use Illuminate\Http\Request;
 
 class AlbumController extends Controller
@@ -13,7 +12,8 @@ class AlbumController extends Controller
      */
     public function index()
     {
-        //
+        $albums = album::withCount(['songs', 'albums'])->get();
+        return view('albums.index', compact('albums'));
     }
 
     /**
@@ -30,29 +30,31 @@ class AlbumController extends Controller
     public function store(Request $request)
     {
         $validated = $request->validate([
-            'title' => 'required|max:255',
-            'artist_id' => 'required|exists:artists,id',
-            'release_date' => 'nullable|date',
-            'cover_image' => 'nullable|image|max:2048',
-            'description' => 'nullable'
+            'name' => 'required|max:255',
+            'description' => 'nullable',
+            'image' => 'nullable|image|max:2048'
         ]);
 
-        if ($request->hasFile('cover_image')) {
-            $validated['cover_image'] = $request->file('cover_image')->store('albums', 'public');
+        if ($request->hasFile('image')) {
+            $validated['image'] = $request->file('image')->store('albums', 'public');
         }
 
-        Album::create($validated);
+        album::create($validated);
 
-        return redirect()->back()->with('success', 'Album created successfully');
+        return redirect()->back()->with('success', 'album created successfully');
     }
 
     /**
      * Display the specified resource.
      */
-    public function show(Album $album)
+    public function show(album $album)
     {
-        $album->load(['artist', 'songs']);
-        return view('albums.show', compact('album'));
+        // Eager load songs để tránh N+1 query
+        $album->load('songs');
+        
+        return view('albums.index', [
+            'album' => $album
+        ]);
     }
 
     /**

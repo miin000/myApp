@@ -5,9 +5,8 @@
 <div class="container mt-4">
     <div class="row mb-4">
         <div class="col-md-12 text-center">
-            <h1 class="mb-4">🎵 Playlist: {{ $playlist->name }}</h1>
-            <p class="text-muted"> {{ $playlist->songs->count() }} bài hát </p>
-            <!-- Thêm các nút chỉnh sửa, xóa, điều hướng ở đây -->
+            <h1 class="mb-4">🎵 Artist: {{ $artist->name }}</h1>
+            <p class="text-muted"> {{ $artist->songs->count() }} bài hát </p>
         </div>
     </div>
 
@@ -25,20 +24,15 @@
                         </div>
                     @endif
                     <ul class="list-group list-group-flush">
-                        @forelse ($playlist->songs as $index => $song)
+                        @forelse ($artist->songs as $index => $song)
                             <li class="list-group-item d-flex justify-content-between align-items-center song-item"
                                 data-song-id="{{ $song->id }}"
                                 data-song-path="{{ asset('storage/' . $song->file_path) }}"
                                 data-song-title="{{ $song->title }}">
                                 <span class="text-primary fw-bold">#{{ $index + 1 }} - {{ $song->title }}</span>
-                                <form action="{{ route('playlists.removeSong',[$playlist->id,$song->id]) }}" method="POST">
-                                    @csrf
-                                    @method('DELETE')
-                                    <button type="submit" class="btn btn-danger btn-sm">❌ Xóa</button>
-                                </form>
                             </li>
                         @empty
-                            <li class="list-group-item text-center">Chưa có bài hát nào trong playlist.</li>
+                            <li class="list-group-item text-center">Nghệ sĩ này chưa có bài hát nào.</li>
                         @endforelse
                     </ul>
                 </div>
@@ -54,8 +48,8 @@
                 <div class="card-body text-center">
                     <h6 id="nowPlaying" class="text-muted mb-3">Chưa có bài hát nào được chọn</h6>
                     <audio id="playlistPlayer" controls class="w-100">
-                        @if($playlist->songs->count() > 0)
-                            <source src="{{ asset('storage/' . $playlist->songs->first()->file_path) }}" type="audio/mpeg">
+                        @if($artist->songs->count() > 0)
+                            <source src="{{ asset('storage/' . $artist->songs->first()->file_path) }}" type="audio/mpeg">
                         @endif
                         Trình duyệt của bạn không hỗ trợ phát nhạc.
                     </audio>

@@ -12,33 +12,25 @@ use Illuminate\Support\Facades\Log;
 
 class SongController extends Controller
 {
-    
-    // public function index()
-    // {
-    //     $songs = Song::with(['artist', 'album'])->get();
-    //     return view('songs.index', compact('songs'));
-    // }
-
     public function index(Request $request)
     {
-        $query = Song::query();
-
+        $query = Song::with(['artist:id,name,image', 'album']);
+        
         if ($request->has('search')) {
-            $search = $request->input('search');
-            $query->where('title', 'LIKE', "%{$search}%")
-                ->orWhereHas('artist', function ($q) use ($search) {
-                    $q->where('name', 'LIKE', "%{$search}%");
+            $search = $request->search;
+            $query->where('title', 'like', "%{$search}%")
+                ->orWhereHas('artist', function($q) use ($search) {
+                    $q->where('name', 'like', "%{$search}%");
                 })
-                ->orWhereHas('album', function ($q) use ($search) {
-                    $q->where('title', 'LIKE', "%{$search}%");
+                ->orWhereHas('album', function($q) use ($search) {
+                    $q->where('title', 'like', "%{$search}%");
                 });
         }
-
+        
         $songs = $query->get();
-
         return view('songs.index', compact('songs'));
     }
-    
+        
     public function create()
     {
         $artists = Artist::with('albums')->get();
@@ -264,5 +256,4 @@ class SongController extends Controller
 
         return response()->file($filePath);
     }
-
 }
