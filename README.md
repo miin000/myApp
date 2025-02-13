@@ -1,5 +1,5 @@
 # YourMUSIC
-<img src="https://github.com/miin000/YourMUSIC/blob/main/images/intro.png">
+<img src="https://github.com/miin000/YourMUSIC/blob/main/images/introview.png">
 <h1>About me</h1>
 <ul>
     <a href = 'https://github.com/miin000' ><li>PHẠM QUANG MINH - 23010489</li></a>
