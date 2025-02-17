@@ -9,9 +9,9 @@ use App\Http\Controllers\ArtistController;
 use App\Http\Controllers\AlbumController;  
 use App\Http\Controllers\GenreController;  
 
-Route::get('/', function () {
-    return view('welcome');
-});
+Route::get('/', function () {  
+    return view('welcome');  
+})->name('welcome');  
 
 Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/dashboard', [HomeController::class, 'index'])->name('dashboard');

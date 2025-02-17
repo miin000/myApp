@@ -17,6 +17,11 @@
                     <h5 class="mb-0">📜 Danh sách bài hát</h5>
                 </div>
                 <div class="card-body p-0">
+                    @if(session('success'))
+                        <div class="alert alert-success m-3">
+                            {{ session('success') }}
+                        </div>
+                    @endif
                     <ul class="list-group list-group-flush">
                         @forelse ($songs as $index => $song)
                             <li class="list-group-item d-flex justify-content-between align-items-center song-item"
@@ -26,7 +31,7 @@
                                 <span class="text-primary fw-bold">#{{ $index + 1 }} - {{ $song->title }}</span>
                             </li>
                         @empty
-                            <li class="list-group-item text-center">Không có bài hát nào trong thể loại này.</li>
+                            <li class="list-group-item text-center">Thể loại này chưa có bài hát nào.</li>
                         @endforelse
                     </ul>
                 </div>
@@ -49,6 +54,13 @@
         </div>
     </div>
 </div>
+
+<style>
+    .song-item:hover {
+        background-color: #f0f0f0;
+        cursor: pointer;
+    }
+</style>
 
 <!-- JavaScript cho trình phát nhạc -->
 <script>

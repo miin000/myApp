@@ -41,7 +41,7 @@
                                         <p>Visit Home</p>
                                     </a>
                                     <!--form logout-->
-                                    <div style="position: absolute; top: 10px; right: 10px;">
+                                    <!-- <div style="position: absolute; top: 10px; right: 10px;">
                                         <form method="POST" action="{{ route('logout') }}" class="inline">
                                             @csrf
                                             <button type="submit" 
@@ -51,7 +51,7 @@
                                                 </p>
                                             </button>
                                         </form>
-                                    </div>
+                                    </div> -->
                                 @else
                                     <a
                                         href="{{ route('login') }}"

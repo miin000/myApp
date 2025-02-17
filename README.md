@@ -1,5 +1,5 @@
 # YourMUSIC
-<img src="https://github.com/miin000/YourMUSIC/blob/main/images/introview.png">
+<img src="https://github.com/miin000/YourMUSIC/blob/main/images/intro.png">
 <h1>About me</h1>
 <ul>
     <a href = 'https://github.com/miin000' ><li>PHẠM QUANG MINH - 23010489</li></a>
@@ -59,7 +59,7 @@ Open your browser and navigate to http://localhost:8000
 <h1 align='center'>Some picture about our website</h1>
 <h2>Login, register</h2>
 <div align='center'>
-    <img src='https://github.com/miin000/YourMUSIC/blob/main/images/loginAndRegister.png'>
+    <img src='https://github.com/miin000/YourMUSIC/blob/main/images/intro_login_register.png'>
     <img src='https://github.com/miin000/YourMUSIC/blob/main/images/login.png'>
     <img src='https://github.com/miin000/YourMUSIC/blob/main/images/register.png'>
 </div>
@@ -71,14 +71,29 @@ Open your browser and navigate to http://localhost:8000
 <hr>
 <h2>Songs view</h2>
 <div align='center' >
-    <img src='https://github.com/miin000/YourMUSIC/blob/main/images/songs.png'>
-    <img src='https://github.com/miin000/YourMUSIC/blob/main/images/playSong.png'>
+    <img src='https://github.com/miin000/YourMUSIC/blob/main/images/song.png'>
+    <img src='https://github.com/miin000/YourMUSIC/blob/main/images/songplay.png'>
 </div>
 <hr>
 <h2>Library</h2>
 <div align='center' >
     <img src='https://github.com/miin000/YourMUSIC/blob/main/images/library.png'>
     <img src='https://github.com/miin000/YourMUSIC/blob/main/images/playlist.png'>
+</div>
+<hr>
+<h2>Artists</h2>
+<div align='center' >
+    <img src='https://github.com/miin000/YourMUSIC/blob/main/images/artist.png'>
+</div>
+<hr>
+Albums</h2>
+<div align='center' >
+    <img src='https://github.com/miin000/YourMUSIC/blob/main/images/album.png'>
+</div>
+<hr>
+<h2>Genre</h2>
+<div align='center' >
+    <img src='https://github.com/miin000/YourMUSIC/blob/main/images/genre.png'>
 </div>
 <hr>
 <h2>Profile</h2>

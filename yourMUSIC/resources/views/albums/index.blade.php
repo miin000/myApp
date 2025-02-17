@@ -5,7 +5,7 @@
 <div class="container mt-4">
     <div class="row mb-4">
         <div class="col-md-12 text-center">
-            <h1 class="mb-4">🎵 Album: {{ $album->name }}</h1>
+            <h1 class="mb-4">🎵 Album: {{ $album->title }}</h1>
             <p class="text-muted"> {{ $album->songs->count() }} bài hát </p>
         </div>
     </div>
@@ -32,7 +32,7 @@
                                 <span class="text-primary fw-bold">#{{ $index + 1 }} - {{ $song->title }}</span>
                             </li>
                         @empty
-                            <li class="list-group-item text-center">Chưa có bài hát nào trong playlist.</li>
+                            <li class="list-group-item text-center">Chưa có bài hát nào trong album này.</li>
                         @endforelse
                     </ul>
                 </div>
