@@ -86,7 +86,7 @@ Open your browser and navigate to http://localhost:8000
     <img src='https://github.com/miin000/YourMUSIC/blob/main/images/artist.png'>
 </div>
 <hr>
-Albums</h2>
+<h2>Albums</h2>
 <div align='center' >
     <img src='https://github.com/miin000/YourMUSIC/blob/main/images/album.png'>
 </div>
