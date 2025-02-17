@@ -8,7 +8,7 @@
 <p>This is a music website that provides users with a flexible and convenient platform to listen to music and create personal playlists.
 Users can register an account, create a personal profile, and customize their playlists according to their preferences. The website also supports sharing and updating information about favorite songs, helping users connect with the music-loving community.</p>
 <p>Detailed project documentation is <a href='https://docs.google.com/document/d/1qB0hNLCN4cUHvEM798GSxUkMZhVVwMd_MrQn3euLO0I/edit?tab=t.0'>here</a></p>
-A
+
 <h2>Main functions include:</h2>
 <ul>
     <li>account management</li>
