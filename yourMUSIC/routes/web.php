@@ -32,7 +32,6 @@ Route::get('/songs', [SongController::class, 'index'])->name('songs.index');
 Route::post('/songs', [SongController::class, 'store'])->name('songs.store');
 Route::get('/songs/{song}/next', [SongController::class, 'next'])->name('songs.next');
 Route::get('/songs/{song}/prev', [SongController::class, 'prev'])->name('songs.prev');
-// Route::post('/songs/{song}/add-to-library', [SongController::class, 'addToLibrary'])->name('library.add');
 
 //test
 Route::get('/playtest', [SongController::class, 'playTest']);

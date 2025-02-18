@@ -31,15 +31,20 @@
                     <span class="ms-2 text-sm text-gray-600">{{ __('Remember me') }}</span>
                 </label>
             </div>
-
-            <div class="flex items-center justify-end mt-4">
+            
+            <div class="flex flex-col sm:flex-row items-center justify-between mt-6">
+            <div class="space-y-2 sm:space-y-0 sm:space-x-4 flex flex-col sm:flex-row items-center mb-4 sm:mb-0">
+                <a class="text-sm text-gray-600 hover:text-gray-900 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500" href="{{ route('register') }}">
+                    {{ __('Register now.') }}
+                </a>
+                    
                 @if (Route::has('password.request'))
-                    <a class="underline text-sm text-gray-600 hover:text-gray-900 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500" href="{{ route('password.request') }}">
+                    <a class="text-sm text-gray-600 hover:text-gray-900 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500" href="{{ route('password.request') }}">
                         {{ __('Forgot your password?') }}
                     </a>
                 @endif
-
-                <x-button class="ms-4">
+                    </div>
+                <x-button class="w-full sm:w-auto">
                     {{ __('Log in') }}
                 </x-button>
             </div>
