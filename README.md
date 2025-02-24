@@ -106,3 +106,11 @@ Open your browser and navigate to http://localhost:8000
 <div align='center' >
     <img src='https://github.com/miin000/YourMUSIC/blob/main/images/profile.png'>
 </div>
+<hr>
+<h2>View dành riêng cho admin</h2>
+<div align='center' >
+    <img src='https://github.com/miin000/YourMUSIC/blob/main/images/admin.png'>
+    <img src='https://github.com/miin000/YourMUSIC/blob/main/images/create.png'>
+    <img src='https://github.com/miin000/YourMUSIC/blob/main/images/create.png'>
+    <img src='https://github.com/miin000/YourMUSIC/blob/main/images/editsong.png'>
+</div>
