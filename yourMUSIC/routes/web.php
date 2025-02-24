@@ -28,7 +28,7 @@ Route::middleware('auth')->group(function () {
 // Routes for Songs
 Route::resource('songs',SongController::class);
 Route::get('/songs', [SongController::class, 'index'])->name('songs.index');
-// Route::get('/songs/create', [SongController::class, 'create'])->name('songs.create');    
+Route::get('/songs/create', [SongController::class, 'create'])->name('songs.create');    
 Route::post('/songs', [SongController::class, 'store'])->name('songs.store');
 Route::get('/songs/{song}/next', [SongController::class, 'next'])->name('songs.next');
 Route::get('/songs/{song}/prev', [SongController::class, 'prev'])->name('songs.prev');

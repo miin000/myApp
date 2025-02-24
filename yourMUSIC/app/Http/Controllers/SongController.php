@@ -147,28 +147,25 @@ class SongController extends Controller
         return view('songs.play', compact('song'));
     }
     
-    public function destroy(Song $song)
-    {
-        // Xóa file
-        if ($song->file_path) {
-            Storage::disk('public')->delete($song->file_path);
-        }
-        
-        $song->delete();
-        return redirect()->route('songs.index')
-        ->with('success', 'Song deleted successfully');
-    }
-    
     public function edit(Song $song)
     {
+        if (auth()->user()->usertype !== 'admin') {
+            return redirect()->route('songs.index')->with('error', 'Bạn không có quyền chỉnh sửa bài hát.');
+        }
+
         $artists = Artist::with('albums')->get();
+        $albums = Album::all(); // Lấy tất albums và artists
         $currentArtistAlbums = $song->artist ? $song->artist->albums : collect();
-        
-        return view('songs.edit', compact('song', 'artists', 'currentArtistAlbums'));
+
+        return view('songs.edit', compact('song', 'artists', 'albums'));
     }
-    
+
     public function update(Request $request, Song $song)
     {
+        if (auth()->user()->usertype !== 'admin') {
+            return redirect()->route('songs.index')->with('error', 'Bạn không có quyền chỉnh sửa bài hát.');
+        }
+
         $request->validate([
             'title' => 'required|string|max:255',
             'artist_id' => 'required|exists:artists,id',
@@ -176,39 +173,48 @@ class SongController extends Controller
             'genre' => 'nullable|string|max:255',
             'song_file' => 'nullable|file|mimes:mp3|max:10240',
         ]);
-        
-        // Kiểm tra album nếu được chọn
+
         if ($request->album_id) {
             $album = Album::findOrFail($request->album_id);
             if ($album->artist_id != $request->artist_id) {
-                return back()->withErrors(['album_id' => 'Selected album does not belong to the selected artist']);
+                return back()->withErrors(['album_id' => 'Album không thuộc về nghệ sĩ đã chọn.']);
             }
         }
-        
-        // Xử lý file nếu có upload mới
+
         if ($request->hasFile('song_file')) {
-            // Xóa file cũ
             if ($song->file_path) {
                 Storage::disk('public')->delete($song->file_path);
             }
-            
+
             $file = $request->file('song_file');
             $fileName = $file->getClientOriginalName();
             $path = $file->storeAs('songs', $fileName, 'public');
-            
+
             $song->file_path = $path;
         }
-        
-        // Cập nhật thông tin
+
         $song->update([
             'title' => $request->title,
             'artist_id' => $request->artist_id,
             'album_id' => $request->album_id,
             'genre' => $request->genre,
         ]);
-        
-        return redirect()->route('songs.index')
-        ->with('success', 'Song updated successfully');
+
+        return redirect()->route('songs.index')->with('success', 'Cập nhật bài hát thành công.');
+    }
+
+    public function destroy(Song $song)
+    {
+        if (auth()->user()->usertype !== 'admin') {
+            return redirect()->route('songs.index')->with('error', 'Bạn không có quyền xóa bài hát.');
+        }
+
+        if ($song->file_path) {
+            Storage::disk('public')->delete($song->file_path);
+        }
+
+        $song->delete();
+        return redirect()->route('songs.index')->with('success', 'Xóa bài hát thành công.');
     }
     
     public function next(Song $song)
