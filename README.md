@@ -38,6 +38,15 @@ Install Dependencies:
     composer install
     npm install
     
+If not installed nodejs:
+
+    curl -fsSL https://deb.nodesource.com/setup_lts.x | sudo -E bash - && sudo apt-get install -y nodejs
+
+Install Dependencies orthers:
+
+    npm run build
+    npm run dev
+    
 Set Up Environment Variables:
 
     cp .env.example .env
