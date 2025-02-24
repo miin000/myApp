@@ -79,6 +79,7 @@ Open your browser and navigate to http://localhost:8000
 <div align='center' >
     <img src='https://github.com/miin000/YourMUSIC/blob/main/images/library.png'>
     <img src='https://github.com/miin000/YourMUSIC/blob/main/images/showplaylist.png'>
+    <img src='https://github.com/miin000/YourMUSIC/blob/main/images/createplaylist.png'>
 </div>
 <hr>
 <h2>Artists</h2>
