@@ -22,6 +22,11 @@ Users can register an account, create a personal profile, and customize their pl
     <img src='https://github.com/miin000/YourMUSIC/blob/main/images/usecase1.png'>
 </div>
 
+<h2>CSDL</h2>
+<div align='center'>
+    <img src='https://github.com/miin000/YourMUSIC/blob/main/images/database.png'>
+</div>
+
 <h1 align='center'>How to deploy - Local Development</h1>
 Clone the Repository:
 
