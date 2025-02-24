@@ -19,7 +19,7 @@ Users can register an account, create a personal profile, and customize their pl
 
 <h2>Use Case</h2>
 <div align='center'>
-    <img src='https://github.com/miin000/YourMUSIC/blob/main/images/usecase.png'>
+    <img src='https://github.com/miin000/YourMUSIC/blob/main/images/usecase1.png'>
 </div>
 
 <h1 align='center'>How to deploy - Local Development</h1>
