@@ -28,6 +28,12 @@ Users can register an account, create a personal profile, and customize their pl
 </div>
 
 <h1 align='center'>How to deploy - Local Development</h1>
+
+Install larvel:
+    
+    composer create-project --prefer-dist laravel/laravel {name}
+    php artisan serve
+
 Clone the Repository:
 
     git clone https://github.com/miin000/myApp.git
