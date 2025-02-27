@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Album;
+use App\Models\Artist;
 use Illuminate\Http\Request;
 
 class AlbumController extends Controller
@@ -62,22 +63,22 @@ class AlbumController extends Controller
      */
     public function edit(Album $album)
     {
-        //
+        $artists = Artist::all();
+        return view('albums.edit', compact('album', 'artists'));
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
     public function update(Request $request, Album $album)
     {
-        //
-    }
+        $validated = $request->validate([
+            'title' => 'required|string|max:255',
+            'artist_id' => 'required|exists:artists,id',
+            'cover_image' => 'nullable|string|max:255', // Nhập đường dẫn ảnh
+            'release_date' => 'nullable|date',
+        ]);
 
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(Album $album)
-    {
-        //
+        $album->update($validated);
+
+        return redirect()->route('albums.show', $album->id)
+            ->with('success', 'Album updated successfully');
     }
 }

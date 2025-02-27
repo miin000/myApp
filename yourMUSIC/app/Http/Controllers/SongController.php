@@ -48,7 +48,7 @@ class SongController extends Controller
                 'artist_name' => 'required|string|max:255',
                 'album_name' => 'nullable|string|max:255',
                 'genre' => 'nullable|string|max:255',
-                'song_file' => 'required|file|mimes:mp3|max:10240',
+                'file_name' => 'required|string|max:255', // Chỉ nhập tên file, không upload
             ]);
 
             Log::info('Validation passed', $validated);
@@ -67,27 +67,8 @@ class SongController extends Controller
                 Log::info('Album processed', ['album_id' => $album->id]);
             }
 
-            // Xử lý file upload
-            if (!$request->hasFile('song_file')) {
-                throw new \Exception('No song file uploaded');
-            }
-
-            $file = $request->file('song_file');
-            $fileName = $file->getClientOriginalName();
-            
-            // Đảm bảo thư mục tồn tại
-            if (!Storage::disk('public')->exists('songs')) {
-                Storage::disk('public')->makeDirectory('songs');
-            }
-
-            // Upload file
-            $path = $file->storeAs('songs', $fileName, 'public');
-            
-            if (!$path) {
-                throw new \Exception('Failed to store the song file');
-            }
-
-            Log::info('File uploaded successfully', ['path' => $path]);
+            // Lưu tên file vào database
+            $virtualPath = 'songs/' . $request->file_name; // Chỉ lưu tên, không upload
 
             // Tạo song record
             $song = new Song();
@@ -95,11 +76,9 @@ class SongController extends Controller
             $song->artist_id = $artist->id;
             $song->album_id = $album ? $album->id : null;
             $song->genre = $request->genre;
-            $song->file_path = $path;
-            
+            $song->file_path = $virtualPath;  
+
             if (!$song->save()) {
-                // Nếu không lưu được song, xóa file đã upload
-                Storage::disk('public')->delete($path);
                 throw new \Exception('Failed to save song to database');
             }
 
@@ -107,39 +86,19 @@ class SongController extends Controller
 
             return redirect()
                 ->route('songs.index')
-                ->with('success', 'Song uploaded successfully');
+                ->with('success', 'Song information saved successfully');
 
         } catch (\Exception $e) {
-            Log::error('Error uploading song', [
+            Log::error('Error saving song', [
                 'message' => $e->getMessage(),
                 'trace' => $e->getTraceAsString()
             ]);
 
             return back()
                 ->withInput()
-                ->withErrors(['error' => 'Failed to upload song: ' . $e->getMessage()]);
+                ->withErrors(['error' => 'Failed to save song: ' . $e->getMessage()]);
         }
-    }
-    
-    // Cập nhật phương thức checkArtist để trả về tên album chính xác
-    public function checkArtist($artistName) 
-    {
-        $artist = Artist::where('name', $artistName)->first();
-        if ($artist) {
-            $albums = $artist->albums->map(function($album) {
-                return [
-                    'id' => $album->id,
-                    'name' => $album->title  // Sử dụng title thay vì name
-                ];
-            });
-            
-            return response()->json([
-                'exists' => true,
-                'albums' => $albums
-            ]);
-        }
-        return response()->json(['exists' => false]);
-    }
+    }  
     
     public function show(Song $song)
     {
@@ -149,9 +108,6 @@ class SongController extends Controller
     
     public function edit(Song $song)
     {
-        if (auth()->user()->usertype !== 'admin') {
-            return redirect()->route('songs.index')->with('error', 'Bạn không có quyền chỉnh sửa bài hát.');
-        }
 
         $artists = Artist::with('albums')->get();
         $albums = Album::all(); // Lấy tất albums và artists
@@ -162,9 +118,6 @@ class SongController extends Controller
 
     public function update(Request $request, Song $song)
     {
-        if (auth()->user()->usertype !== 'admin') {
-            return redirect()->route('songs.index')->with('error', 'Bạn không có quyền chỉnh sửa bài hát.');
-        }
 
         $request->validate([
             'title' => 'required|string|max:255',
@@ -189,7 +142,7 @@ class SongController extends Controller
             $file = $request->file('song_file');
             $fileName = $file->getClientOriginalName();
             $path = $file->storeAs('songs', $fileName, 'public');
-
+            
             $song->file_path = $path;
         }
 
@@ -205,10 +158,7 @@ class SongController extends Controller
 
     public function destroy(Song $song)
     {
-        if (auth()->user()->usertype !== 'admin') {
-            return redirect()->route('songs.index')->with('error', 'Bạn không có quyền xóa bài hát.');
-        }
-
+        
         if ($song->file_path) {
             Storage::disk('public')->delete($song->file_path);
         }
@@ -224,7 +174,7 @@ class SongController extends Controller
             ->orderBy('id')
             ->first();
         
-        // Nếu không có bài tiếp theo (đang ở bài cuối cùng)
+            // Nếu không có bài tiếp theo (đang ở bài cuối cùng)
         // thì quay lại bài đầu tiên trong danh sách
         if (!$nextSong) {
             $nextSong = Song::orderBy('id')
@@ -261,5 +211,24 @@ class SongController extends Controller
         }
 
         return response()->file($filePath);
+    }
+    // phương thức checkArtist để trả về tên album chính xác
+    public function checkArtist($artistName) 
+    {
+        $artist = Artist::where('name', $artistName)->first();
+        if ($artist) {
+            $albums = $artist->albums->map(function($album) {
+                return [
+                    'id' => $album->id,
+                    'name' => $album->title  // Sử dụng title thay vì name
+                ];
+            });
+            
+            return response()->json([
+                'exists' => true,
+                'albums' => $albums
+            ]);
+        }
+        return response()->json(['exists' => false]);
     }
 }

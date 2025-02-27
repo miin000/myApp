@@ -1,7 +1,14 @@
 @extends('layouts.app')
 
 @section('content')
-
+@if(auth()->user()->usertype === 'admin')
+<a href="{{ route('songs.edit', $song->id) }}" class="btn btn-warning">Sửa</a>
+<form action="{{ route('songs.destroy', $song->id) }}" method="POST" style="display:inline;">
+    @csrf
+    @method('DELETE')
+    <button type="submit" class="btn btn-danger" onclick="return confirm('Bạn có chắc muốn xóa?')">Xóa</button>
+</form>
+@endif
 <div class="container">
     <div class="row mb-4">
         <div class="col-md-12 text-center">
@@ -10,11 +17,11 @@
                 <p class="mb-1">
                     Artist: {{ $song->artist->name }}
                     @if($song->album)
-                        | Album: {{ $song->album->title }}
+                    | Album: {{ $song->album->title }}
                     @endif
                 </p>
                 @if($song->genre)
-                    <p class="mb-1">Genre: {{ $song->genre }}</p>
+                <p class="mb-1">Genre: {{ $song->genre }}</p>
                 @endif
             </div>
         </div>
@@ -47,48 +54,48 @@
     </div>
 
     @auth
-        <div class="card">
-            <div class="card-header">
-                <h3 class="mb-0">Add to Playlist</h3>
-            </div>
-            <div class="card-body">
-                <div class="row">
-                    @forelse(Auth::user()->playlists as $playlist)
-                        <div class="col-md-4 mb-3">
-                            <a href="{{ route('playlists.show', $playlist->id) }}" class="text-decoration-none">
-                                <div class="card h-100 listPlay">
-                                    <div class="card-body">
-                                        <h5 class="card-title">{{ $playlist->name }}</h5>
-                                        <p class="card-text small text-muted">
-                                            {{ $playlist->songs->count() }} songs
-                                        </p>
-                                        <form action="{{ route('playlists.addSong', [$playlist->id, $song->id]) }}" method="POST">
-                                            @csrf
-                                            <button type="submit" class="btn btn-primary btn-sm w-100">
-                                                Add to this playlist
-                                            </button>
-                                        </form>
-                                    </div>
-                                </div>
-                            </a>
-                        </div>
-                    @empty
-                        <div class="col-12">
-                            <p class="text-muted">You don't have any playlists yet.</p>
-                        </div>
-                    @endforelse
-                    <div class="col-md-4 mb-3">
-                        <div class="card h-100">
-                            <div class="card-body d-flex align-items-center justify-content-center">
-                                <a href="{{ route('playlists.create') }}" class="btn btn-outline-primary">
-                                    <i class="bi bi-plus-lg"></i> Create New Playlist
-                                </a>
+    <div class="card">
+        <div class="card-header">
+            <h3 class="mb-0">Add to Playlist</h3>
+        </div>
+        <div class="card-body">
+            <div class="row">
+                @forelse(Auth::user()->playlists as $playlist)
+                <div class="col-md-4 mb-3">
+                    <a href="{{ route('playlists.show', $playlist->id) }}" class="text-decoration-none">
+                        <div class="card h-100 listPlay">
+                            <div class="card-body">
+                                <h5 class="card-title">{{ $playlist->name }}</h5>
+                                <p class="card-text small text-muted">
+                                    {{ $playlist->songs->count() }} songs
+                                </p>
+                                <form action="{{ route('playlists.addSong', [$playlist->id, $song->id]) }}" method="POST">
+                                    @csrf
+                                    <button type="submit" class="btn btn-primary btn-sm w-100">
+                                        Add to this playlist
+                                    </button>
+                                </form>
                             </div>
+                        </div>
+                    </a>
+                </div>
+                @empty
+                <div class="col-12">
+                    <p class="text-muted">You don't have any playlists yet.</p>
+                </div>
+                @endforelse
+                <div class="col-md-4 mb-3">
+                    <div class="card h-100">
+                        <div class="card-body d-flex align-items-center justify-content-center">
+                            <a href="{{ route('playlists.create') }}" class="btn btn-outline-primary">
+                                <i class="bi bi-plus-lg"></i> Create New Playlist
+                            </a>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
+    </div>
     @endauth
 </div>
 
@@ -107,22 +114,27 @@
     }
 
     .artist-image-container {
-        width: 200px; /* Adjust as needed */
-        height: 200px; /* Adjust as needed */
+        width: 200px;
+        /* Adjust as needed */
+        height: 200px;
+        /* Adjust as needed */
         margin: 0 auto;
     }
 
     .artist-image {
         width: 100%;
         height: 100%;
-        object-fit: cover; /* Ensure image covers the container */
-        animation: rotate 20s linear infinite; /* Rotate animation */
+        object-fit: cover;
+        /* Ensure image covers the container */
+        animation: rotate 20s linear infinite;
+        /* Rotate animation */
     }
 
     @keyframes rotate {
         from {
             transform: rotate(0deg);
         }
+
         to {
             transform: rotate(360deg);
         }
@@ -148,9 +160,9 @@
 @endpush
 
 @if(session('error'))
-    <div class="alert alert-danger">
-        {{ session('error') }}
-    </div>
+<div class="alert alert-danger">
+    {{ session('error') }}
+</div>
 @endif
 
 @endsection

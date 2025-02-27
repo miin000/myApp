@@ -42,10 +42,11 @@ Route::post('playlists/{playlist}/songs/{song}',[PlaylistController::class,'addS
 Route::delete('playlists/{playlist}/songs/{song}',[PlaylistController::class,'removeSong'])->name('playlists.removeSong');
 
 // Album Routes
+Route::resource('albums', AlbumController::class);
 Route::get('/albums/{album}', [AlbumController::class, 'show'])->name('albums.show');
-Route::get('/check-artist/{artistName}', [SongController::class, 'checkArtist'])->name('songs.checkArtist');
 
 // Artist Routes
+Route::resource('artists', ArtistController::class);
 Route::get('/artists/{artist}', [ArtistController::class, 'show'])->name('artists.show');
 
 //Genre

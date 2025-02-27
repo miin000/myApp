@@ -41,8 +41,8 @@
         </div>
 
         <div class="mb-3">
-            <label for="song_file" class="form-label">Tập tin nhạc (MP3)</label>
-            <input type="file" name="song_file" id="song_file" class="form-control">
+            <label for="file_path" class="form-label">Song File Name (MP3)</label>
+            <input type="text" class="form-control" id="file_path" name="file_path" value="{{ $song->file_path }}" placeholder="example.mp3" required>
             @if($song->file_path)
                 <p>File hiện tại: <a href="{{ asset('storage/' . $song->file_path) }}" target="_blank">Nghe nhạc</a></p>
             @endif

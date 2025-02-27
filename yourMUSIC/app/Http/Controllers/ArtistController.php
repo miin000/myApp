@@ -68,22 +68,20 @@ class ArtistController extends Controller
      */
     public function edit(Artist $artist)
     {
-        //
+        return view('artists.edit', compact('artist'));
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
     public function update(Request $request, Artist $artist)
     {
-        //
-    }
+        $validated = $request->validate([
+            'name' => 'required|string|max:255',
+            'description' => 'nullable|string',
+            'image' => 'nullable|string|max:255', // Nhập đường dẫn ảnh
+        ]);
 
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(Artist $artist)
-    {
-        //
+        $artist->update($validated);
+
+        return redirect()->route('artists.show', $artist->id)
+            ->with('success', 'Artist updated successfully');
     }
 }

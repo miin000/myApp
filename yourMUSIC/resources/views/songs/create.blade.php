@@ -38,8 +38,8 @@
         </div>
 
         <div class="mb-3">
-            <label for="song_file" class="form-label">Song File (MP3)</label>
-            <input type="file" class="form-control" id="song_file" name="song_file" accept=".mp3" required>
+            <label for="file_name" class="form-label">Song File (MP3)</label>
+            <input type="text" class="form-control" id="file_name" name="file_name" placeholder="example.mp3" required>
         </div>
 
         <button type="submit" class="btn btn-primary">Upload Song</button>

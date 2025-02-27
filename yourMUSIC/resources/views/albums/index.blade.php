@@ -1,11 +1,10 @@
 @extends('layouts.app')
 
 @section('content')
-
+<a href="{{ route('albums.edit', $album->id) }}" class="btn btn-warning">Edit Album</a>
 <div class="container mt-4">
     <div class="row mb-4">
         <div class="col-md-12 text-center">
-            <h1 class="mb-4">🎵 Album: {{ $album->title }}</h1>
             <p class="text-muted"> {{ $album->songs->count() }} bài hát </p>
         </div>
     </div>

@@ -2,12 +2,15 @@
 
 @section('content')
 
+<a href="{{ route('artists.edit', $artist->id) }}" class="btn btn-warning">Edit Artist</a>
 <div class="container mt-4">
     <div class="row mb-4">
         <div class="col-md-12 text-center">
             <h1 class="mb-4">🎵 Artist: {{ $artist->name }}</h1>
+            <p>Description: {{ $artist->description }}</p>
             <p class="text-muted"> {{ $artist->songs->count() }} bài hát </p>
         </div>
+        
     </div>
 
     <div class="row">
